@@ -11,13 +11,15 @@ const ProductSchema = new mongoose.Schema(
       required: true 
     },
     img: { 
-      type: String
+      type: String,
+      default: "my_image.png"
     },
     categories: { 
       type: Array 
     },
     size: { 
-      type: String 
+      type: String,
+      default: 0
     },
     color: { 
       type: String 
