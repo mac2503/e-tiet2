@@ -15,6 +15,7 @@ connectDB();
 // Route files
 const userAuth = require('./routes/userAuth');
 const product = require('./routes/product');
+const order = require('./routes/order');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(cookieParser());
 // Mount routers
 app.use('/api/v1/user', userAuth);
 app.use('/api/v1/product', product);
+app.use('/api/v1/order', order);
 
 app.use(errorHandler);
 
