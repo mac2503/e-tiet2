@@ -1,9 +1,12 @@
 const express = require('express');
 const { 
   addOrder,
-  deleteOrder,
-  getOrderById,
-  getAllOrders
+  deleteOrderBuyer,
+  deleteOrderSeller,
+  getOrderByIdBuyer,
+  getOrderByIdSeller,
+  getAllOrdersBuyer,
+  getAllOrdersSeller
 } = require('../controllers/order');
 
 const router = express.Router();
@@ -11,8 +14,11 @@ const router = express.Router();
 const {protect} = require('../middleware/userAuth');
 
 router.post('/add/:id', protect, addOrder);
-router.delete('/delete/:id', protect, deleteOrder);
-router.get('/get-by-id/:id', protect, getOrderById);
-router.get('/get-all', protect, getAllOrders);
+router.delete('/delete-buyer/:id', protect, deleteOrderBuyer);
+router.delete('/delete-seller/:id', protect, deleteOrderSeller);
+router.get('/get-by-id-buyer/:id', protect, getOrderByIdBuyer);
+router.get('/get-by-id-seller/:id', protect, getOrderByIdSeller);
+router.get('/get-all-buyer', protect, getAllOrdersBuyer);
+router.get('/get-all-seller', protect, getAllOrdersSeller);
 
 module.exports = router;
