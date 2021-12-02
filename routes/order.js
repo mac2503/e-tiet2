@@ -6,7 +6,8 @@ const {
   getOrderByIdBuyer,
   getOrderByIdSeller,
   getAllOrdersBuyer,
-  getAllOrdersSeller
+  getAllOrdersSeller,
+  updateOrder
 } = require('../controllers/order');
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.get('/get-by-id-buyer/:id', protect, getOrderByIdBuyer);
 router.get('/get-by-id-seller/:id', protect, getOrderByIdSeller);
 router.get('/get-all-buyer', protect, getAllOrdersBuyer);
 router.get('/get-all-seller', protect, getAllOrdersSeller);
+router.put('/update/:id', protect, updateOrder);
 
 module.exports = router;

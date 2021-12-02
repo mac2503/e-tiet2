@@ -1,6 +1,7 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 // @desc      Add product
 // @route     POST /api/v1/product/add
@@ -27,8 +28,7 @@ exports.addProduct = asyncHandler(async (req, res, next) => {
 // @route     PUT /api/v1/product/update/:id
 // @access    Private
 exports.updateProduct = asyncHandler (async (req, res, next) => {
-  const fieldsToUpdate = {
-    title: req.body.title,
+  let fieldsToUpdate = {
     desc: req.body.desc,
     img: req.body.img, 
     categories: req.body.categories, 
@@ -115,11 +115,54 @@ exports.getProductById = asyncHandler (async (req, res, next) => {
   });
 });
 
+// @desc      Get product by id - seller
+// @route     GET /api/v1/product/get-by-id-seller/:id
+// @access    Private
+exports.getProductByIdSeller = asyncHandler (async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Product doesn't exist" });
+  }
+
+  if (!product.seller.equals(req.user.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Not authorised to perform this action",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: product
+  });
+});
+
 // @desc      Get all products
 // @route     GET /api/v1/product/get-all
 // @access    Public
 exports.getAllProducts = asyncHandler (async (req, res, next) => {
   const products = await Product.find({});
+
+  if (!products) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Products doesn't exist" });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: products
+  });
+});
+
+// @desc      Get all products - seller
+// @route     GET /api/v1/product/get-all-seller
+// @access    Private
+exports.getAllProductsSeller = asyncHandler (async (req, res, next) => {
+  const products = await Product.find({seller: req.user._id});
 
   if (!products) {
     return res
