@@ -29,6 +29,21 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
+  otp: {
+    code: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    validity: {
+      type: Date,
+      default: new Date(Date.now() + 15 * 60 * 1000),
+    }
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   hostel: {
     type: String,
     trim: true,
@@ -40,6 +55,14 @@ const UserSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+// Match otp entered by the user with otp stored in the database
+UserSchema.methods.matchOtp = function (enteredOtp) {
+  if (enteredOtp !== this.otp.code) {
+    return false;
+  }
+  return true;
+};
 
 // Encrypt password using bcrypt
 UserSchema.pre('save', async function(next) {

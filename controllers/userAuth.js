@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
+const otpGenerator = require("otp-generator");
 const User = require('../models/User');
 
 // @desc      Register User
@@ -10,17 +11,33 @@ const User = require('../models/User');
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, phone, rollno, email, password, hostel } = req.body;
 
-  // Create user
-  const user = await User.create({
-    name, 
-    phone,
-    rollno,
-    email,
-    password,
-    hostel
-  });
+  let user = await User.findOne({ email: email });
+    if (user) {
+      return res.status(400).json('user already exists');
+    }
+    
+    const otp = otpGenerator.generate(6, {
+      upperCase: false,
+      specialChars: false,
+    });
+    const newValue = { name, phone, rollno, email, password, hostel, otp: { code: otp } }
 
-  sendTokenResponse(user, 200, res);
+    user = await User.create(newValue);
+
+    const message = `Thanks for registering! We need you to verify your email first. You can do so by entering ${user.otp.code}. This code is valid for only next 15 minutes.`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Verification OTP',
+      message
+    });
+    sendTokenResponse(user, 200, res);
+
+  } catch (err) {
+    console.log(err);
+    return next(new ErrorResponse('Email could not be sent', 500));
+  }
 });
 
 // @desc      Login User
@@ -49,6 +66,78 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   sendTokenResponse(user, 200, res);
+});
+
+// @desc     Verify Otp
+// @route    POST /api/v1/user/verify-otp
+// @access   Private
+exports.verifyOtp = asyncHandler(async (req, res, next) => {
+
+    const user = await User.findById(req.user.id);
+    const { otp } = req.body;
+
+    if (user.verified === true) {
+      return next(new ErrorResponse('Already verified', 400));
+    }
+
+    // Check if otp matches
+    const isMatch = await user.matchOtp(otp);
+
+    if (!isMatch) {
+      return next(new ErrorResponse('Invalid otp', 401));
+    }
+
+    const currentTime = new Date(Date.now());
+    if (user.otp.validity < currentTime) {
+      return next(new ErrorResponse('OTP has expired', 400));
+    }
+
+    user.verified = true;
+    await user.save({ validateBeforeSave: false });
+    return res.status(200).json({ message: "Sucessfully Verified" });
+});
+
+// @desc     Regenerate Otp
+// @route    PUT /api/v1/user/regenerate-otp
+// @access   Private
+exports.regenerateOtp = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });
+    }
+
+    // if user is already verified
+    if (user.verified === true) {
+      return res.status(400).json({ errors: [{ msg: 'User already verified' }] });
+    }
+
+    user.otp.code = undefined;
+    user.otp.validity = undefined;
+    const otp = otpGenerator.generate(6, {
+      upperCase: false,
+      specialChars: false,
+    });
+
+    const validity = new Date(Date.now() + 15 * 60 * 1000);
+    user.otp.code = otp;
+    user.otp.validity = validity;
+    await user.save({ validateBeforeSave: false });
+
+    const message = `Thanks for registering! We need you to verify your email first. You can do so by entering ${user.otp.code}. This code is valid for only next 15 minutes.`;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Verification OTP',
+        message
+      });
+
+      sendTokenResponse(user, 200, res);
+      
+    } catch (err) {
+      console.log(err);
+      return next(new ErrorResponse('Email could not be sent', 500));
+    }
 });
 
 // @desc      Get current logged in user
@@ -142,10 +231,6 @@ exports.forgotPassword = asyncHandler (async (req, res, next) => {
     return next(new ErrorResponse('Email could not be sent', 500));
   }
 
-  // res.status(200).json({
-  //   success: true,
-  //   data: user
-  // });
 });
 
 // @desc      Reset password
