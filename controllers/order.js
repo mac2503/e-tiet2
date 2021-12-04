@@ -1,3 +1,4 @@
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Product = require('../models/Product');
@@ -213,3 +214,51 @@ exports.updateOrder = asyncHandler (async (req, res, next) => {
     data: order
   });
 });
+
+// @desc      Make payment - buyer
+// @route     POST /api/v1/order/make-payment/:id
+// @access    Private
+exports.addPayment = asyncHandler(async (req, res, next) => {
+
+  let order = await Order.findById(req.params.id);
+
+  if (!order.buyer.equals(req.user.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Not authorised to perform this action",
+    });
+  }
+
+  let user = await User.findById(req.user._id);
+  let product = await Product.findById(order.itemId);
+
+  stripe.customers.create({ 
+    email: user.email, 
+    source: 'tok_mastercard', 
+    name: user.name, 
+    address: { 
+        line1: user.hostel, 
+        postal_code: '147004', 
+        city: 'Patiala', 
+        state: 'Punjab', 
+        country: 'India', 
+    } 
+}) 
+.then((customer) => { 
+
+    return stripe.charges.create({ 
+        amount: (order.totalAmount)*100,
+        description: product.title, 
+        currency: 'INR', 
+        customer: customer.id 
+    }); 
+}).then((charge) => { 
+  return res
+      .status(200)
+      .json({ success: true, message: "Payment successful" });
+}).catch((err) => { 
+  return res
+      .status(400)
+      .json({ success: false, message: "Payment failed" });
+});
+})
