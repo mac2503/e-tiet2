@@ -1,4 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_KEY);
+const {ObjectId} = require('mongodb');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Product = require('../models/Product');
@@ -232,6 +233,16 @@ exports.addPayment = asyncHandler(async (req, res, next) => {
   let user = await User.findById(req.user._id);
   let product = await Product.findById(order.itemId);
 
+  const pid = new ObjectId();
+  console.log(pid)
+  const fieldsToUpdate = {
+    paymentId: pid
+  }
+  order = await Order.findByIdAndUpdate(req.params.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true
+  });
+
   stripe.customers.create({ 
     email: user.email, 
     source: 'tok_mastercard', 
@@ -252,7 +263,7 @@ exports.addPayment = asyncHandler(async (req, res, next) => {
         currency: 'INR', 
         customer: customer.id 
     }); 
-}).then((charge) => { 
+}).then((charge) => {  
   return res
       .status(200)
       .json({ success: true, message: "Payment successful" });
