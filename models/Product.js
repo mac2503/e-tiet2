@@ -11,8 +11,10 @@ const ProductSchema = new mongoose.Schema(
       required: true 
     },
     img: { 
-      type: String,
-      default: "my_image.png"
+      type: String
+    },
+    cloudinary_id: {
+      type: String
     },
     categories: { 
       type: Array 

@@ -2,18 +2,24 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../utils/multer");
 
 // @desc      Add product
 // @route     POST /api/v1/product/add
 // @access    Private
 exports.addProduct = asyncHandler(async (req, res, next) => {
 
-  const {title, desc, img, categories, size, color, price, seller} = req.body;
+  // Upload image to cloudinary
+  const result = await cloudinary.uploader.upload(req.file.path);
+
+  const {title, desc, categories, size, color, price, seller} = req.body;
 
   const product = await Product.create({
     title, 
     desc, 
-    img, 
+    img: result.secure_url, 
+    cloudinary_id: result.public_id,
     categories, 
     size, 
     color, 
@@ -61,6 +67,45 @@ exports.updateProduct = asyncHandler (async (req, res, next) => {
   });
 });
 
+// @desc      Update product image
+// @route     PUT /api/v1/product/update-image/:id
+// @access    Private
+exports.updateProductImage = asyncHandler (async (req, res, next) => {
+
+  let product = await Product.findById(req.params.id);
+  // Delete image from cloudinary
+  await cloudinary.uploader.destroy(product.cloudinary_id);
+  // Upload image to cloudinary
+  let result = await cloudinary.uploader.upload(req.file.path);
+  let fieldsToUpdate = {
+    img: result.secure_url, 
+    cloudinary_id: result.public_id
+  }
+
+    if (!product) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Product doesn't exist" });
+    }
+
+  // Check if the person updating is the seller of the product
+  if (product.seller != (req.user.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Not authorised to perform this action",
+    });
+  }
+  product = await Product.findByIdAndUpdate(req.params.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    success: true,
+    data: product
+  });
+});
+
 // @desc     Delete product
 // @route    DELETE /api/v1/product/delete/:id
 // @access   Private
@@ -81,6 +126,9 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
         message: "Not authorised to perform this action",
       });
     }
+
+    // Delete image from cloudinary
+    await cloudinary.uploader.destroy(product.cloudinary_id);
 
     await product.remove();
 
