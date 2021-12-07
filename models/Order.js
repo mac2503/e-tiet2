@@ -50,6 +50,4 @@ const OrderSchema = new mongoose.Schema(
   }
 );
 
-// OrderSchema.index({ buyer: 1, seller: 1 });
-
 module.exports = mongoose.model('Order', OrderSchema);
