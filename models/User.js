@@ -17,6 +17,12 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add a roll no.']
   },
+  image: {
+    type: String
+  },
+  user_cloudinary_id: {
+    type: String
+  },
   email: {
     type: String,
     required: [true, 'Please add an email'],
