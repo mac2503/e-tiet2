@@ -4,6 +4,8 @@ const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 const otpGenerator = require("otp-generator");
 const User = require('../models/User');
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../utils/multer");
 
 // @desc      Register User
 // @route     POST /api/v1/user/register
@@ -190,6 +192,62 @@ exports.updatePassword = asyncHandler (async (req, res, next) => {
   await user.save();
 
   sendTokenResponse(user, 200, res);
+});
+
+// @desc      Update profile picture
+// @route     PUT /api/v1/user/update-profile-picture
+// @access    Private
+exports.updateProfilePicture = asyncHandler (async (req, res, next) => {
+
+  let user = await User.findById(req.user.id)
+
+  if (user.user_cloudinary_id != 'blxnmzylfcxt23m6ok3v') {
+    // Delete image from cloudinary if not the default image
+    await cloudinary.uploader.destroy(user.user_cloudinary_id);
+  }
+
+  // Upload image to cloudinary
+  let result = await cloudinary.uploader.upload(req.file.path);
+  let fieldsToUpdate = {
+    image: result.secure_url, 
+    user_cloudinary_id: result.public_id
+  }
+  user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    success: true,
+    data: user
+  });
+});
+
+// @desc     Remove uploaded profile picture
+// @route    DELETE /api/v1/user/remove-profile-picture
+// @access   Private
+exports.removeProfilePicture = asyncHandler(async (req, res, next) => {
+
+  let user = await User.findById(req.user.id)
+
+    if (user.user_cloudinary_id != 'blxnmzylfcxt23m6ok3v') {
+      // Delete image from cloudinary
+      await cloudinary.uploader.destroy(user.user_cloudinary_id);
+      let fieldsToUpdate = {
+        image: 'https://res.cloudinary.com/dy5dig5uo/image/upload/v1639044829/blxnmzylfcxt23m6ok3v.png', 
+        user_cloudinary_id: 'blxnmzylfcxt23m6ok3v'
+      }
+      user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+        new: true,
+        runValidators: true
+      });
+    } else {
+      return next(new ErrorResponse('Default profile picture cannot be removed!', 401));
+    }
+    res.status(200).json({
+      success: true,
+      data: "Profile picture removed!",
+    });
 });
 
 // @desc      Forgot password

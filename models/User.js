@@ -18,10 +18,12 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please add a roll no.']
   },
   image: {
-    type: String
+    type: String,
+    default: 'https://res.cloudinary.com/dy5dig5uo/image/upload/v1639044829/blxnmzylfcxt23m6ok3v.png'
   },
   user_cloudinary_id: {
-    type: String
+    type: String,
+    default: 'blxnmzylfcxt23m6ok3v'
   },
   email: {
     type: String,

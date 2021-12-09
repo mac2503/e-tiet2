@@ -36,7 +36,6 @@ exports.addProduct = asyncHandler(async (req, res, next) => {
 exports.updateProduct = asyncHandler (async (req, res, next) => {
   let fieldsToUpdate = {
     desc: req.body.desc,
-    img: req.body.img, 
     categories: req.body.categories, 
     size: req.body.size, 
     color: req.body.color, 

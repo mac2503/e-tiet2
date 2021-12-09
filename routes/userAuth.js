@@ -1,4 +1,5 @@
 const express = require('express');
+const upload = require("../utils/multer");
 const { 
   register, 
   login, 
@@ -8,6 +9,8 @@ const {
   forgotPassword,  
   updateDetails,
   updatePassword,
+  updateProfilePicture,
+  removeProfilePicture,
   resetPassword
 } = require('../controllers/userAuth');
 
@@ -22,6 +25,8 @@ router.put('/regenerate-otp', protect, regenerateOtp);
 router.get('/me', protect, getMe);
 router.put('/update-details', protect, updateDetails);
 router.put('/update-password', protect, updatePassword);
+router.put('/update-profile-picture', protect, upload.single('image'), updateProfilePicture);
+router.delete('/remove-profile-picture', protect, removeProfilePicture);
 router.post('/forgot-password', forgotPassword);
 router.put('/reset-password/:resetToken', resetPassword);
 
