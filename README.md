@@ -1,6 +1,6 @@
 ### e-TIET
 
-e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within the University. 
+e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within Thapar. 
 It aims to eliminate the chaos that students confront when purchasing basic requirements inside the campus.
 
 ![](images/1_Home_page_without_login.png)
