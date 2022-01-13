@@ -1,32 +1,36 @@
-### e-TIET
+# e-TIET
 
-e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within Thapar. 
+e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within Thapar.
 It aims to eliminate the chaos that students confront when purchasing basic requirements inside the campus.
+
+## UI/UX Screenshot
 
 ![](images/1_Home_page_without_login.png)
 
-![](images/2_Category_without_login.png)
+## Tech Stack Used
 
-![](images/3_Stationary_without_login.png)
+MongoDB - Database used
+Express - Server/routing API for web app
+Node - Backend JS runtime
+Mailtrap - Test mail server
+Cloudinary - Image management tool
+Stripe - Payment API
 
-![](images/4_Hostel_necessities_without_login.png)
+## API Reference
 
-![](images/5_Cycles_without_login.png)
+Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP](https://documenter.getpostman.com/view/11541273/UVXhrHaP)
 
-![](images/6_Login.png)
+## How to build and run this project
 
-![](images/7_Sign_up.png)
+### Setting up the project
 
-![](images/8_OTP_verification.png)
+- Clone this repository: `https://github.com/mac2503/e-tiet2.git`
+- Create .env file in the root directory of the project
+- Install node.js and npm on your local machine
+- Install the dependencies: `npm install`
 
-![](images/9_View_profile_options_after_login.png)
+### Running the project
 
-![](images/10_Edit_profile_after_login.png)
-
-![](images/11_Profile_picture_after_login.png)
-
-![](images/12_Item_Cycle_Page_after_login.png)
-
-![](images/13_Sell_Choose_category.png)
-
-![](images/14_Sell_Add_details_Stationary.png)
+- Run the dev script in the terminal: `npm run dev`:
+  - Server starts running at http://localhost:5000
+  - Server automatically restarts when any of the files are changed
