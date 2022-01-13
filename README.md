@@ -9,12 +9,12 @@ It aims to eliminate the chaos that students confront when purchasing basic requ
 
 ## Tech Stack Used
 
-MongoDB - Database used
-Express - Server/routing API for web app
-Node - Backend JS runtime
-Mailtrap - Test mail server
-Cloudinary - Image management tool
-Stripe - Payment API
+- MongoDB - Database used
+- Express - Server/routing API for web app
+- Node - Backend JS runtime
+- Mailtrap - Test mail server
+- Cloudinary - Image management tool
+- Stripe - Payment API
 
 ## API Reference
 
