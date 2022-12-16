@@ -17,10 +17,6 @@ e-TIET is an e-commerce platform that provides an ease in establishment of conne
 - Cloudinary - Image management tool
 - Stripe - Payment API
 
-### API Reference
-
-Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP](https://documenter.getpostman.com/view/11541273/UVXhrHaP)
-
 ### How to build and run this project
 
 ### Setting up the project
@@ -40,6 +36,10 @@ Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP
 
 ![](images/e-tiet_use_case_diagram.png)
 
-## 4. Screenshot of the Interface
+## 4. Live Link
+
+Link: [https://documenter.getpostman.com/view/11541273/UVXhrHaP](https://documenter.getpostman.com/view/11541273/UVXhrHaP)
+
+## 5. Screenshot of the Interface
 
 ![](images/1_Home_page_without_login.png)
