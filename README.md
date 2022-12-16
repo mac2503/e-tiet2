@@ -1,13 +1,14 @@
-# e-TIET
+# Title: e-TIET
 
-e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within Thapar.
-It aims to eliminate the chaos that students confront when purchasing basic requirements inside the campus.
+## 1. Methodology
 
-## UI/UX Screenshot
+![](images/etiet_methodology.jpeg)
 
-![](images/1_Home_page_without_login.png)
+## 2. Description
 
-## Tech Stack Used
+e-TIET is an e-commerce platform that provides an ease in establishment of connection between buyers and sellers i.e. students within Thapar. It aims to eliminate the chaos that students confront when purchasing basic requirements inside the campus.
+
+### Tech Stack Used
 
 - MongoDB - Database used
 - Express - Server/routing API for web app
@@ -16,11 +17,11 @@ It aims to eliminate the chaos that students confront when purchasing basic requ
 - Cloudinary - Image management tool
 - Stripe - Payment API
 
-## API Reference
+### API Reference
 
 Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP](https://documenter.getpostman.com/view/11541273/UVXhrHaP)
 
-## How to build and run this project
+### How to build and run this project
 
 ### Setting up the project
 
@@ -34,3 +35,15 @@ Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP
 - Run the dev script in the terminal: `npm run dev`:
   - Server starts running at http://localhost:5000
   - Server automatically restarts when any of the files are changed
+
+## 3. Input/Output
+
+![](images/e-tiet_use_case_diagram.png)
+
+## 4. Live Link
+
+Link: [https://drive.google.com/file/d/1pu2zweASCqkqs5EAN_Nu8NR5SiKBrh4f/view?usp=sharing](https://drive.google.com/file/d/1pu2zweASCqkqs5EAN_Nu8NR5SiKBrh4f/view?usp=sharing)
+
+## 5. Screenshot of the Interface
+
+![](images/1_Home_page_without_login.png)
