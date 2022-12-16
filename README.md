@@ -40,10 +40,6 @@ Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP
 
 ![](images/e-tiet_use_case_diagram.png)
 
-## 4. Live Link
-
-Link: [https://drive.google.com/file/d/1pu2zweASCqkqs5EAN_Nu8NR5SiKBrh4f/view?usp=sharing](https://drive.google.com/file/d/1pu2zweASCqkqs5EAN_Nu8NR5SiKBrh4f/view?usp=sharing)
-
-## 5. Screenshot of the Interface
+## 4. Screenshot of the Interface
 
 ![](images/1_Home_page_without_login.png)
