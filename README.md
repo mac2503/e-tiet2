@@ -32,7 +32,7 @@ Postman Documentation: [https://documenter.getpostman.com/view/11541273/UVXhrHaP
 
 ### Running the project
 
-- Run the dev script in the terminal: `npm run dev`:
+- Run the dev script in the terminal: `npm run dev`
   - Server starts running at http://localhost:5000
   - Server automatically restarts when any of the files are changed
 
